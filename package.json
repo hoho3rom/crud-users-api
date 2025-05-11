@@ -1,0 +1,24 @@
+{
+  "name": "crud-users-api",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hoho3rom/crud-users-api.git"
+  },
+  "author": "Alena Dounar",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/hoho3rom/crud-users-api/issues"
+  },
+  "homepage": "https://github.com/hoho3rom/crud-users-api#readme",
+  "devDependencies": {
+    "@types/node": "^22.15.17",
+    "nodemon": "^3.1.10"
+  }
+}
