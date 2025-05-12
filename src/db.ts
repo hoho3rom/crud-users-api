@@ -1,0 +1,58 @@
+import { CustomError } from "./errorHandling/CustomError.js";
+import type { User } from "./types.js";
+
+const users: User[] = [];
+
+const userNotExist = (id: string) => {
+    return new CustomError(404, `User with id '${id}' doesn't exists`);
+}
+
+const getUsers = () => {
+    return users;
+}
+
+const getUserById = (id: string) => {
+    const user = users.find(user => user.id === id);
+    if (!user) {
+        throw userNotExist(id);
+    }
+
+    return user;
+}
+
+const createUser = (user: User) => {
+    const id = crypto.randomUUID();
+
+    user.id = id;
+
+    users.push(user);
+    return user;
+}
+
+const updateUser = (id: string, newUser: User) => {   
+    const userIndex = users.findIndex(user => user.id === id);
+    if (userIndex === -1) {
+        throw userNotExist(id);
+    }
+
+    newUser.id = id;
+    users.splice(userIndex, 1, newUser);
+    return newUser;
+}
+
+const deleteUser = (id: string) => {
+    const userIndex = users.findIndex(user => user.id === id);
+    if (userIndex === -1) {
+        throw userNotExist(id);
+    }
+
+    users.splice(userIndex, 1);
+}
+
+export const db = {
+    getUsers,
+    getUserById,
+    createUser,
+    updateUser,
+    deleteUser,
+}
