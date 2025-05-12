@@ -3,7 +3,7 @@ import type { User } from "./types.js";
 
 const users: User[] = [];
 
-const userNotExist = (id: string) => {
+const UserNotExistError = (id: string) => {
     return new CustomError(404, `User with id '${id}' doesn't exists`);
 }
 
@@ -14,7 +14,7 @@ const getUsers = () => {
 const getUserById = (id: string) => {
     const user = users.find(user => user.id === id);
     if (!user) {
-        throw userNotExist(id);
+        throw UserNotExistError(id);
     }
 
     return user;
@@ -29,21 +29,22 @@ const createUser = (user: User) => {
     return user;
 }
 
-const updateUser = (id: string, newUser: User) => {   
+const updateUser = (id: string, updatedUser: User) => {   
     const userIndex = users.findIndex(user => user.id === id);
     if (userIndex === -1) {
-        throw userNotExist(id);
+        throw UserNotExistError(id);
     }
 
-    newUser.id = id;
-    users.splice(userIndex, 1, newUser);
-    return newUser;
+    updatedUser.id = id;
+
+    users.splice(userIndex, 1, updatedUser);
+    return updatedUser;
 }
 
 const deleteUser = (id: string) => {
     const userIndex = users.findIndex(user => user.id === id);
     if (userIndex === -1) {
-        throw userNotExist(id);
+        throw UserNotExistError(id);
     }
 
     users.splice(userIndex, 1);

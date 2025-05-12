@@ -1,14 +1,15 @@
 import url from 'url';
-import { Method, parseValidatePath, parseUser, validateId, validateUser } from './utils.js';
+import { parseValidatePath, parseUser, validateId, validateUser } from './utils.js';
 import type { IncomingMessage, ServerResponse } from 'http';
 import { db } from './db.js';
+import { CustomError } from './errorHandling/CustomError.js';
+import { Method } from './types.js';
 
 const pathToMethodToApi = new Map<string, Record<string, Function>>();
-pathToMethodToApi.set('api/users', { [Method.GET]: listUsers, [Method.POST]: createUser });
-pathToMethodToApi.set('api/users/{userId}', { [Method.GET]: getUserById, [Method.PUT]: updateUser, [Method.DELETE]: deleteUser });
+pathToMethodToApi.set('/api/users', { [Method.GET]: listUsers, [Method.POST]: createUser });
+pathToMethodToApi.set('/api/users/{userId}', { [Method.GET]: getUserById, [Method.PUT]: updateUser, [Method.DELETE]: deleteUser });
 
-
-export const handle = async (request: IncomingMessage, response: ServerResponse) => {
+export const controller = async (request: IncomingMessage, response: ServerResponse) => {
     const parsedUrl = url.parse(request.url || '', true);
     const method = request.method || '';
 
@@ -16,20 +17,23 @@ export const handle = async (request: IncomingMessage, response: ServerResponse)
     validateId(id);
 
     const api = pathToMethodToApi.get(path)?.[method];
+    if (!api) {
+        throw new CustomError(404, `Method ${method} not allowed on path ${path}`);
+    }
 
     id != null
-        ? api?.(id, request, response)
-        : api?.(request, response);
+        ? await api(id, request, response)
+        : await api(request, response);
 }
 
-async function listUsers(request: IncomingMessage, response: ServerResponse) {
+function listUsers(request: IncomingMessage, response: ServerResponse) {
     const users = db.getUsers();
 
     response.writeHead(200);
     response.end(JSON.stringify(users));
 }
 
-async function getUserById(id: string, request: IncomingMessage, response: ServerResponse) {
+function getUserById(id: string, request: IncomingMessage, response: ServerResponse) {
     const user = db.getUserById(id);
 
     response.writeHead(200);
@@ -52,7 +56,7 @@ async function updateUser(id: string, request: IncomingMessage, response: Server
     response.end(JSON.stringify(updatedUser));
 }
 
-async function deleteUser(id: string, request: IncomingMessage, response: ServerResponse) {
+function deleteUser(id: string, request: IncomingMessage, response: ServerResponse) {
     db.deleteUser(id);
 
     response.writeHead(204);
