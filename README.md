@@ -1,17 +1,18 @@
 # crud-users-api
 
 run the following commands:
-nvm use 22.14           // or the later versions of node
-npm i                   // to install node-modules
+- nvm use 22.14           // or the later versions of node
+- npm i                   // to install node-modules
 
 Select appropriate PORT for you in .env, default would be 3000
 
-npm run start:dev       // run server locally
+- npm run start:dev       // run server locally
 
-There is a 'nodejs_crud_users.postman_collection.json' file with crud api for http://localhost:3000/api/users
+There is a __'nodejs_crud_users.postman_collection.json'__ file with crud api for http://localhost:3000/api/users
 
-You may find assignments using link below, I skipped 7 and 8
-https://github.com/AlreadyBored/nodejs-assignments/blob/main/assignments/crud-api/assignment.md
+You may find assignments using link below, I skipped 7 and 8:
+
+    https://github.com/AlreadyBored/nodejs-assignments/blob/main/assignments/crud-api/assignment.md
 
 Duplicated content from the link above without requirements 7 and 8:
 
